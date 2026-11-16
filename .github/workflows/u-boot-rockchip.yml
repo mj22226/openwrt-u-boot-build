@@ -21,9 +21,10 @@ jobs:
             - name: Build
               run: |
                 git clone https://github.com/openwrt/openwrt.git
-                cp -rf .github/workflows/spi.patch openwrt/
+                cp -rf .github/workflows/*.patch openwrt/
                 cd openwrt
                 git apply spi.patch
+                git apply 01-add-more-boards.patch
                 wget https://github.com/mj22226/openwrt-arm64/releases/download/rockchip-22.1.3/llvm-bpf-22.1.3.Linux-aarch64.tar.zst
                 tar -xvf llvm-bpf-22.1.3.Linux-aarch64.tar.zst
                 ./scripts/feeds update -a
