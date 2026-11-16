@@ -1,0 +1,112 @@
+name: Build OpenWrt Rockchip U-boot
+on:
+   workflow_dispatch:
+jobs:
+    build:
+        name: Build rockchip u-boot
+        runs-on: ubuntu-26.04-arm
+        steps:
+            - name: Setup Ubuntu
+              run: |
+                sudo apt update
+                sudo apt install -y subversion build-essential gettext python3-pyelftools python3-distutils-extra
+            - name: Setup Go
+              uses: actions/setup-go@main
+              with:
+                go-version: '1.27.4'
+            - name: Go Version
+              run: go version
+            - name: checkout
+              uses: actions/checkout@main
+            - name: Build
+              run: |
+                git clone https://github.com/openwrt/openwrt.git
+                cp -rf .github/workflows/spi.patch openwrt/
+                cd openwrt
+                git apply spi.patch
+                wget https://github.com/mj22226/openwrt-arm64/releases/download/rockchip-22.1.3/llvm-bpf-22.1.3.Linux-aarch64.tar.zst
+                tar -xvf llvm-bpf-22.1.3.Linux-aarch64.tar.zst
+                ./scripts/feeds update -a
+                ./scripts/feeds install -a
+                echo "CONFIG_TARGET_rockchip=y" >> .config
+                echo "CONFIG_TARGET_rockchip_armv8=y" >> .config
+                echo "CONFIG_TARGET_MULTI_PROFILE=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_armsom_sige7=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_firefly_roc-rk3328-cc=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopc-t4=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopc-t6=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-m5=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2c=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2c-plus=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s-plus=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r3s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r4s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r4s-enterprise=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r5c=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r5s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r6c=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r6s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_friendlyarm_nanopi-r76s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_hinlink_h28k=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_hinlink_h66k=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_hinlink_h68k=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_linkease_easepi-r1=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_lunzn_fastrhino-r66s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_pine64_rock64=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_pine64_rockpro64=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_cm3-io=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_e20c=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_e25=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_e52c=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-2a=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-2f=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-3a=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-3b=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-3c=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-4c-plus=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-4d=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-4se=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-5-itx=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-5a=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-5b=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-5b-plus=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-5c=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-5t=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-pi-4a=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-pi-e=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-pi-e-v3=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-pi-s=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_zero-3e=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_zero-3w=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_sinovoip_bpi-r2-pro=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_xunlong_orangepi-r1-plus=y" >> .config
+                echo "CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_xunlong_orangepi-r1-plus-lts=y" >> .config
+                echo "CONFIG_DEVEL=y" >> .config
+                echo "CONFIG_BUILD_LOG=y" >> .config
+                echo "# CONFIG_KERNEL_WERROR is not set" >> .config
+                echo "CONFIG_TARGET_ALL_PROFILES=y" >> .config
+                echo 'CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT="/opt/hostedtoolcache/go/1.27.4/arm64/bin"' >> .config
+                make defconfig
+                make download -j32
+                make toolchain/install -j$(nproc)
+                make package/boot/uboot-rockchip/{clean,compile} -j$(nproc)
+                echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+                echo "PKG_VERSION=$(grep -n "PKG_VERSION:=" package/boot/uboot-rockchip/Makefile | tail -c +16)" >> $GITHUB_ENV
+            - name: Delete tag
+              uses: ClementTsang/delete-tag-and-release@v0.4.0
+              with:
+                delete_release: true
+                tag_name: uboot-${{ env.PKG_VERSION }}-${{ env.D }}
+              env:
+                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Create release
+              uses: ncipollo/release-action@main
+              with:
+                allowUpdates: true
+                name: OpenWrt Rockchip U-boot V${{ env.PKG_VERSION }} ${{ env.D }}
+                tag: uboot-${{ env.PKG_VERSION }}-${{ env.D }}
+                replacesArtifacts: true
+                makeLatest: true
+                token: "${{ secrets.GITHUB_TOKEN }}"
+                artifacts: openwrt/staging_dir/target-aarch64_generic_musl/image/*u-boot-rockchip.bin, openwrt/staging_dir/target-aarch64_generic_musl/image/*spi.bin
