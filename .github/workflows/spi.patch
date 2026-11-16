@@ -1,0 +1,12 @@
+diff --git a/package/boot/uboot-rockchip/Makefile b/package/boot/uboot-rockchip/Makefile
+index c780545fd4..92a661116f 100644
+--- a/package/boot/uboot-rockchip/Makefile
++++ b/package/boot/uboot-rockchip/Makefile
+@@ -509,6 +509,7 @@ endef
+ define Build/InstallDev
+ 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
+ 	$(CP) $(PKG_BUILD_DIR)/u-boot-rockchip.bin $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot-rockchip.bin
++	$(CP) $(PKG_BUILD_DIR)/u-boot-rockchip-spi.bin $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot-rockchip-spi.bin || true
+ endef
+ 
+ define Package/u-boot/install/default
